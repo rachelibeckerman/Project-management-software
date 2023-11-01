@@ -1,4 +1,5 @@
-﻿namespace Targil0
+﻿
+namespace Stage0
 {
     partial class Program
     {
