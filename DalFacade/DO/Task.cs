@@ -8,6 +8,7 @@ public record Task
     DateTime CreatedAt,
     DateTime? Start,
     DateTime? ScheduledDate,
+    DateTime? ForecastDate,
     DateTime? Deadline,
     DateTime? Complete,
     string? Deliverables,
