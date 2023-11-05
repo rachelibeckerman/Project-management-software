@@ -5,6 +5,7 @@ public record Engineer
     string Name,
     string Email,
     EngineerExperience Level,
-    double Cost
+    double Cost,
+    bool Status = true
 );
 

@@ -7,26 +7,36 @@ public class TaskImplementation : ITask
 {
     public int Create(Task item)
     {
-        throw new NotImplementedException();
+        int newId = DataSource.Config.NextTaskId;
+        Task copyItem = item with { Id = newId };
+        DataSource.Tasks!.Add(copyItem);
+        return newId;
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        throw new Exception($"A Task can't be deleted.");
     }
 
     public Task? Read(int id)
     {
-        throw new NotImplementedException();
+        Task? foundValue = DataSource.Tasks?.Find(task => task.Id == id);
+        return foundValue != null ? foundValue : null;
     }
 
     public List<Task> ReadAll()
     {
-        throw new NotImplementedException();
+       return new List<Task>(DataSource.Tasks);
     }
 
     public void Update(Task item)
     {
-        throw new NotImplementedException();
+        Task? foundValue = DataSource.Tasks?.Find(task => task.Id == item.Id);
+        if (foundValue == null)
+        {
+            throw new Exception($"A Task with {item.Id} id does not exist.");
+        }
+        DataSource.Tasks!.Remove(foundValue!);
+        DataSource.Tasks!.Add(item);
     }
 }
