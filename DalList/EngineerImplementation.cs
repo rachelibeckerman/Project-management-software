@@ -19,13 +19,13 @@ public class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        Engineer? foundValue = DataSource.Engineers?.Find(eng => eng.Id == id);
+        Engineer? foundValue = DataSource.Engineers?.Find(eng =>  eng.Id == id);
         if (foundValue == null)
         {
             throw new Exception($"An Engineer with {id} id does not exist.");
         }
         Engineer copyItem = foundValue with { Status = false };
-        DataSource.Engineers!.Remove(copyItem);
+        DataSource.Engineers!.Remove(foundValue);
         DataSource.Engineers!.Add(copyItem);
     }
 
