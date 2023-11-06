@@ -1,6 +1,8 @@
 ﻿namespace Dal;
 using DO;
-
+/// <summary>
+/// data source and congig running number
+/// </summary>
 internal static class DataSource
 {
     internal static List<Engineer>? Engineers = new ();

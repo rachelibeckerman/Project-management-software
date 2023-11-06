@@ -2,7 +2,9 @@
 using DalApi;
 using DO;
 using System.Data.Common;
-
+/// <summary>
+/// Initialization Data
+/// </summary>
 public static class Initialization
 {
 

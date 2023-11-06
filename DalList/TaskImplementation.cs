@@ -2,7 +2,9 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
-
+/// <summary>
+/// Task Implementation (CRUD)
+/// </summary>
 public class TaskImplementation : ITask
 {
     public int Create(Task item)

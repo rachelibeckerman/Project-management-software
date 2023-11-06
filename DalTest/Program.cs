@@ -7,7 +7,9 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Transactions;
 using System.Xml.Linq;
-
+/// <summary>
+/// main program
+/// </summary>
 internal class Program
 {
     private static IDependency? s_dalDependency = new DependencyImplementation(); //stage 1

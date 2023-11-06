@@ -2,7 +2,9 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
-
+/// <summary>
+/// Dependency Implementation (CRUD)
+/// </summary>
 public class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
