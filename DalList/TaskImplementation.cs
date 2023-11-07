@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Task Implementation (CRUD)
 /// </summary>
-public class TaskImplementation : ITask
+internal class TaskImplementation : ITask
 {
     public int Create(Task item)
     {
@@ -17,28 +17,38 @@ public class TaskImplementation : ITask
 
     public void Delete(int id)
     {
-        throw new Exception($"A Task can't be deleted.");
+        throw new DalDeletionImpossible($"A Task can't be deleted.");
     }
 
     public Task? Read(int id)
     {
-        Task? foundValue = DataSource.Tasks?.Find(task => task.Id == id);
+        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == id).First();
         return foundValue != null ? foundValue : null;
     }
 
-    public List<Task> ReadAll()
+    public Task? Read(Func<Task, bool> filter)
     {
-       return new List<Task>(DataSource.Tasks);
+        Task? foundValue = DataSource.Tasks?.Where(filter).First();
+        return foundValue != null ? foundValue : null;
+    }
+
+    public IEnumerable<Task?> ReadAll(Func<Task?, bool>? filter = null) //stage 2
+    {
+        if (filter == null)
+            return DataSource.Tasks.Select(item => item);
+        else
+            return DataSource.Tasks.Where(filter);
+
     }
 
     public void Update(Task item)
     {
-        Task? foundValue = DataSource.Tasks?.Find(task => task.Id == item.Id);
+        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == item.Id).First();
         if (foundValue == null)
         {
-            throw new Exception($"A Task with {item.Id} id does not exist.");
+            throw new DalDoesNotExistException($"A Task with {item.Id} id does not exist.");
         }
-        DataSource.Tasks!.Remove(foundValue!);
+        DataSource.Tasks!.RemoveAll(task => task.Id == item.Id);
         DataSource.Tasks!.Add(item);
     }
 }

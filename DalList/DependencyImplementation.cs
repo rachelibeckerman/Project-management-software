@@ -1,11 +1,12 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+using System.Collections;
 using System.Collections.Generic;
 /// <summary>
 /// Dependency Implementation (CRUD)
 /// </summary>
-public class DependencyImplementation : IDependency
+internal class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
     {
@@ -17,33 +18,44 @@ public class DependencyImplementation : IDependency
 
     public void Delete(int id)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Find(dep => dep.Id == id);
+        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == id).First();
         if (foundValue == null)
         {
-            throw new Exception($"An Dependency with {id} id does not exist.");
+            throw new DalDoesNotExistException($"An Dependency with {id} id does not exist.");
         }
-        DataSource.Dependencies!.Remove(foundValue);
+        DataSource.Dependencies!.RemoveAll(dep => dep.Id == id);
     }
 
     public Dependency? Read(int id)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Find(dep => dep.Id == id);
+        Dependency? foundValue = DataSource.Dependencies?.Where( dep => dep.Id == id).First();
         return foundValue != null ? foundValue : null;
     }
 
-    public List<Dependency> ReadAll()
+    public Dependency? Read(Func<Dependency, bool> filter)
     {
-       return new List<Dependency>(DataSource.Dependencies);
+        Dependency? foundValue = DataSource.Dependencies?.Where(filter).First();
+        return foundValue != null ? foundValue : null;
+    }
+
+    public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null) //stage 2
+    {
+        if (filter != null)
+            return from dep in DataSource.Dependencies
+                   where filter(dep)
+                   select dep;
+        return from dep in DataSource.Dependencies
+               select dep;
     }
 
     public void Update(Dependency item)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Find(dep => dep.Id == item.Id);
+        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == item.Id).First();
         if (foundValue == null)
         {
-            throw new Exception($"An Dependency with {item.Id} id does not exist.");
+            throw new DalDoesNotExistException($"An Dependency with {item.Id} id does not exist.");
         }
-        DataSource.Dependencies!.Remove(foundValue!);
+        DataSource.Dependencies!.RemoveAll(dep => dep.Id == item.Id);
         DataSource.Dependencies!.Add(item);
     }
 }
