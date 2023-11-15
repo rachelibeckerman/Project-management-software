@@ -16,5 +16,7 @@ public record Engineer
     EngineerExperience Level,
     double Cost,
     bool Status = true
-);
-
+)
+{
+    public Engineer() : this(0,"","",(EngineerExperience)0,0) { } //empty ctor for stage 3
+}

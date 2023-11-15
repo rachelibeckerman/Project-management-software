@@ -32,4 +32,7 @@ public record Task
     string? Remarks,
     int? EngineerId,
     EngineerExperience? ComplexityLevel
-);
+)
+{
+    public Task() : this(0, "", "", false, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, "","",0,0) { } //empty ctor for stage 3
+}
