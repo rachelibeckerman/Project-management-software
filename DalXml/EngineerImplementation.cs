@@ -24,7 +24,7 @@ internal class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).First();
         if (foundValue == null)
         {
@@ -38,14 +38,14 @@ internal class EngineerImplementation : IEngineer
 
     public Engineer? Read(int id)
     {
-        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).First();
         return foundValue != null ? foundValue : null;
     }
 
     public Engineer? Read(Func<Engineer, bool> filter)
     {
-        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         Engineer? foundValue = engineersList.Where(filter).First();
         return foundValue != null ? foundValue : null;
     }

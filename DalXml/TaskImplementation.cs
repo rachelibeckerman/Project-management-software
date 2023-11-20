@@ -4,7 +4,7 @@ using DO;
 using System;
 using System.Collections.Generic;
 
-internal class TaskImplementetion : ITask
+internal class TaskImplementation : ITask
 {
     const string s_tasks = "tasks"; //XML Serializer
 
