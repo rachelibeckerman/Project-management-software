@@ -15,8 +15,8 @@ static class XMLTools
     }
 
     #region Extension Fuctions
-    public static T? ToEnumNullable<T>(this XElement element, string name) where T : struct, Enum =>
-        Enum.TryParse<T>((string?)element.Element(name), out var result) ? (T?)result : null;
+    public static T? ToEnumNullable<T>(this XElement element, string name) where T : struct,
+        Enum => Enum.TryParse<T>((string?)element.Element(name), out var result) ? (T?)result : null;
 
     public static DateTime? ToDateTimeNullable(this XElement element, string name) =>
         DateTime.TryParse((string?)element.Element(name), out var result) ? (DateTime?)result : null;

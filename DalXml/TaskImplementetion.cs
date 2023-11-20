@@ -6,13 +6,15 @@ using System.Collections.Generic;
 
 internal class TaskImplementetion : ITask
 {
+    const string s_tasks = "tasks"; //XML Serializer
+
     public int Create(Task item)
     {
-        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>("tasks");
+        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         int newId = Config.NextTaskId;
         Task copyItem = item with { Id = newId };
         tasksList.Add(copyItem);
-        XMLTools.SaveListToXMLSerializer<Task>(tasksList, "tasks");
+        XMLTools.SaveListToXMLSerializer<Task>(tasksList, s_tasks);
         return newId;
     }
 
@@ -23,21 +25,21 @@ internal class TaskImplementetion : ITask
 
     public Task? Read(int id)
     {
-        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>("tasks");
+        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         Task? foundValue = tasksList.Where(task => task.Id == id).First();
         return foundValue != null ? foundValue : null;
     }
 
     public Task? Read(Func<Task, bool> filter)
     {
-        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>("tasks");
+        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         Task? foundValue = tasksList.Where(filter).First();
         return foundValue != null ? foundValue : null;
     }
 
     public IEnumerable<Task?> ReadAll(Func<Task?, bool>? filter = null) //stage 2
     {
-        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>("tasks");
+        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         if (filter == null)
             return tasksList.Select(item => item);
         else
@@ -47,7 +49,7 @@ internal class TaskImplementetion : ITask
 
     public void Update(Task item)
     {
-        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>("tasks");
+        List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         Task? foundValue = tasksList.Where(task => task.Id == item.Id).First();
         if (foundValue == null)
         {
@@ -55,6 +57,6 @@ internal class TaskImplementetion : ITask
         }
         tasksList.RemoveAll(task => task.Id == item.Id);
         tasksList.Add(item);
-        XMLTools.SaveListToXMLSerializer<Task>(tasksList, "tasks");
+        XMLTools.SaveListToXMLSerializer<Task>(tasksList, s_tasks);
     }
 }

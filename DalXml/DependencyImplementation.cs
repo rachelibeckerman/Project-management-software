@@ -3,64 +3,72 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 
 internal class DependencyImplementation : IDependency
 {
-    public int Create(Dependency item)
+    const string s_dependency = "dependencies"; //Linq to XML
+
+    static Dependency? getDependency(XElement d) =>
+        d.ToIntNullable("Id") is null ? null : new Dependency()
+        { 
+            Id = (int)d.Element("Id")!,
+            DependentTask = (int?)d.Element("DependentTask")!,
+            DependentOnTask = (int?)d.Element("DependentTask")!
+        };
+
+    static IEnumerable<XElement> createDependencyElement(Dependency dependency)
     {
-        //XDocument x = XMLTools.LoadListFromXMLElement("dependencies");
-       // XElement? dependenciesElem = XMLTools.LoadListFromXMLElement("dependencies");
-       // List<XElement> dependenciesList = new XElement("ArrayOfDependency",from el in dependenciesElem. select el);
-        int newId = Config.NextDependencyId;
-        Dependency copyItem = item with { Id = newId };
-        dependencyList.Add(copyItem);
-        XMLTools.SaveListToXMLElement(dependencyList, "dependencies");
-        return newId;
+        yield return new XElement("Id", dependency.Id);
+        if (dependency.DependentTask is not null)
+            yield return new XElement("DependentTask", dependency.DependentTask);
+        if (dependency.DependentOnTask is not null)
+            yield return new XElement("DependentOnTask", dependency.DependentOnTask);
+    }
+
+  
+    public int Create(Dependency item)
+    { 
+        XElement? dependenciesRootElem = XMLTools.LoadListFromXMLElement(s_dependency);
+        dependenciesRootElem.Add(new XElement("Dependency", createDependencyElement(item)));
+        XMLTools.SaveListToXMLElement(dependenciesRootElem, s_dependency);
+        return item.Id;
+
     }
 
     public void Delete(int id)
     {
-    //  List<XElement> 
-      //  XElement dependencyList = XMLTools.LoadListFromXMLElement("dependencies");
-        Dependency? foundValue = dependencyList. .Where(dep => dep.Id == id).First();
-        if (foundValue == null)
-        {
-            throw new DalDoesNotExistException($"An Dependency with {id} id does not exist.");
-        }
-        DataSource.Dependencies!.RemoveAll(dep => dep.Id == id);
+        XElement? dependenciesRootElem = XMLTools.LoadListFromXMLElement(s_dependency);
+        (dependenciesRootElem.Elements().FirstOrDefault(dep => (int?)dep.Element("Id") == id) 
+         ?? throw new Exception($"An Dependency with {id} id does not exist.")).Remove();
+        XMLTools.SaveListToXMLElement(dependenciesRootElem, s_dependency);
     }
 
     public Dependency? Read(int id)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == id).First();
-        return foundValue != null ? foundValue : null;
+        XElement? dependenciesRootElem = XMLTools.LoadListFromXMLElement(s_dependency)?.Elements()
+                                        .FirstOrDefault(dep => dep.ToIntNullable("Id") == id);
+        if(dependenciesRootElem == null)
+            return null;
+        return getDependency(dependenciesRootElem);
     }
 
     public Dependency? Read(Func<Dependency, bool> filter)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(filter).First();
-        return foundValue != null ? foundValue : null;
+        List<Dependency?> dependenciesList = XMLTools.LoadListFromXMLElement(s_dependency).Elements().Select(getDependency).ToList();
+        return dependenciesList?.Where(filter!).FirstOrDefault() ?? null;
     }
 
-    public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null) //stage 2
+    public IEnumerable<Dependency?> ReadAll(Func<Dependency, bool>? filter = null) //stage 2
     {
-        if (filter != null)
-            return from dep in DataSource.Dependencies
-                   where filter(dep)
-                   select dep;
-        return from dep in DataSource.Dependencies
-               select dep;
+        return filter is null ? XMLTools.LoadListFromXMLElement(s_dependency).Elements().Select(getDependency)
+                            : XMLTools.LoadListFromXMLElement(s_dependency).Elements().Select(getDependency).Where(filter!);
     }
 
     public void Update(Dependency item)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == item.Id).First();
-        if (foundValue == null)
-        {
-            throw new DalDoesNotExistException($"An Dependency with {item.Id} id does not exist.");
-        }
-        DataSource.Dependencies!.RemoveAll(dep => dep.Id == item.Id);
-        DataSource.Dependencies!.Add(item);
+        Delete(item.Id);
+        Create(item);
     }
 }
