@@ -21,7 +21,7 @@ internal class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        Engineer? foundValue =DataSource.Engineers?.Where(eng => eng.Id == id).First();
+        Engineer? foundValue =DataSource.Engineers?.Where(eng => eng.Id == id).FirstOrDefault();
         if (foundValue == null)
         {
             throw new DalDoesNotExistException($"An Engineer with {id} ID does not exist.");

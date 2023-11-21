@@ -22,13 +22,13 @@ internal class TaskImplementation : ITask
 
     public Task? Read(int id)
     {
-        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == id).First();
+        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == id).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
     public Task? Read(Func<Task, bool> filter)
     {
-        Task? foundValue = DataSource.Tasks?.Where(filter).First();
+        Task? foundValue = DataSource.Tasks?.Where(filter).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
@@ -43,7 +43,7 @@ internal class TaskImplementation : ITask
 
     public void Update(Task item)
     {
-        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == item.Id).First();
+        Task? foundValue = DataSource.Tasks?.Where(task => task.Id == item.Id).FirstOrDefault();
         if (foundValue == null)
         {
             throw new DalDoesNotExistException($"A Task with {item.Id} id does not exist.");

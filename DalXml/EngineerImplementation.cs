@@ -12,7 +12,7 @@ internal class EngineerImplementation : IEngineer
     public int Create(Engineer item)
     {
         List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
-        Engineer? foundValue = engineersList.Where(eng => eng?.Id == item.Id).First();
+        Engineer? foundValue = engineersList.Where(eng => eng?.Id == item.Id).FirstOrDefault();
         if (foundValue != null)
         {
             throw new DalAlreadyExistsException($"An Engineer with {item.Id} ID already exists.");
@@ -39,7 +39,7 @@ internal class EngineerImplementation : IEngineer
     public Engineer? Read(int id)
     {
         List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
-        Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).First();
+        Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 

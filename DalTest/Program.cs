@@ -395,7 +395,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch  { throw ; }
     }
     private static void ReadDependency()
     {
@@ -407,7 +407,7 @@ internal class Program
     }
     private static void ReadAllDependencys()
     {
-        IEnumerable<Dependency>? dependencies = s_dal!.Dependency.ReadAll();
+        IEnumerable<Dependency>? dependencies = s_dal!.Dependency.ReadAll()!;
         foreach (Dependency dependency in dependencies)
         {
             Console.WriteLine(dependency);
@@ -426,14 +426,14 @@ internal class Program
         int.TryParse(Console.ReadLine() , out DependentTask);
         if(DependentTask == 0) 
         {
-            DependentTask = (int)foundDepndency.DependentTask;
+            DependentTask = (int)foundDepndency?.DependentTask!;
         }
         Console.WriteLine("Enter updated DependentOnTask:");
         int DependentOnTask;
         int.TryParse(Console.ReadLine() , out DependentOnTask);
         if (DependentOnTask == 0)
         {
-            DependentOnTask = (int)foundDepndency.DependentOnTask;
+            DependentOnTask = (int)foundDepndency?.DependentOnTask!;
         }
         Dependency newDependency = new Dependency(Id, DependentTask,DependentOnTask);
         try
@@ -443,7 +443,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ) { throw; }
 
     }
     private static void DeleteDependency()
@@ -458,7 +458,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ) { throw ; }
     }
     private static void Main(string[] args)
     {

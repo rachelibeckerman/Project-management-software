@@ -31,10 +31,11 @@ internal class DependencyImplementation : IDependency
     public int Create(Dependency item)
     { 
         XElement? dependenciesRootElem = XMLTools.LoadListFromXMLElement(s_dependency);
-        dependenciesRootElem.Add(new XElement("Dependency", createDependencyElement(item)));
+        int newId = Config.NextDependencyId;
+        Dependency copyItem = item with { Id = newId };
+        dependenciesRootElem.Add(new XElement("Dependency", createDependencyElement(copyItem)));
         XMLTools.SaveListToXMLElement(dependenciesRootElem, s_dependency);
-        return item.Id;
-
+        return newId;
     }
 
     public void Delete(int id)

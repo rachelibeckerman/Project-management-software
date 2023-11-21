@@ -18,7 +18,7 @@ internal class DependencyImplementation : IDependency
 
     public void Delete(int id)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == id).First();
+        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == id).FirstOrDefault();
         if (foundValue == null)
         {
             throw new DalDoesNotExistException($"An Dependency with {id} id does not exist.");
@@ -28,13 +28,13 @@ internal class DependencyImplementation : IDependency
 
     public Dependency? Read(int id)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where( dep => dep.Id == id).First();
+        Dependency? foundValue = DataSource.Dependencies?.Where( dep => dep.Id == id).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
     public Dependency? Read(Func<Dependency, bool> filter)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(filter).First();
+        Dependency? foundValue = DataSource.Dependencies?.Where(filter).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
@@ -50,7 +50,7 @@ internal class DependencyImplementation : IDependency
 
     public void Update(Dependency item)
     {
-        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == item.Id).First();
+        Dependency? foundValue = DataSource.Dependencies?.Where(dep => dep.Id == item.Id).FirstOrDefault();
         if (foundValue == null)
         {
             throw new DalDoesNotExistException($"An Dependency with {item.Id} id does not exist.");

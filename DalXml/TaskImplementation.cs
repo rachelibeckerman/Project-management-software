@@ -26,14 +26,14 @@ internal class TaskImplementation : ITask
     public Task? Read(int id)
     {
         List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
-        Task? foundValue = tasksList.Where(task => task.Id == id).First();
+        Task? foundValue = tasksList.Where(task => task.Id == id).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
     public Task? Read(Func<Task, bool> filter)
     {
         List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
-        Task? foundValue = tasksList.Where(filter).First();
+        Task? foundValue = tasksList.Where(filter).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
@@ -50,7 +50,7 @@ internal class TaskImplementation : ITask
     public void Update(Task item)
     {
         List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
-        Task? foundValue = tasksList.Where(task => task.Id == item.Id).First();
+        Task? foundValue = tasksList.Where(task => task.Id == item.Id).FirstOrDefault();
         if (foundValue == null)
         {
             throw new DalDoesNotExistException($"A Task with {item.Id} id does not exist.");
