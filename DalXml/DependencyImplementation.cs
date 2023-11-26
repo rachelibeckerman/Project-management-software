@@ -15,7 +15,7 @@ internal class DependencyImplementation : IDependency
         { 
             Id = (int)d.Element("Id")!,
             DependentTask = (int?)d.Element("DependentTask")!,
-            DependentOnTask = (int?)d.Element("DependentTask")!
+            DependentOnTask = (int?)d.Element("DependentOnTask")!
         };
 
     static IEnumerable<XElement> createDependencyElement(Dependency dependency)
@@ -69,7 +69,10 @@ internal class DependencyImplementation : IDependency
 
     public void Update(Dependency item)
     {
-        Delete(item.Id);
-        Create(item);
+        XElement? dependenciesRootElem = XMLTools.LoadListFromXMLElement(s_dependency);
+        (dependenciesRootElem.Elements().FirstOrDefault(dep => (int?)dep.Element("Id") == item.Id)
+         ?? throw new Exception($"An Dependency with {item.Id} id does not exist.")).Remove();
+        dependenciesRootElem.Add(new XElement("Dependency", createDependencyElement(item)));
+        XMLTools.SaveListToXMLElement(dependenciesRootElem, s_dependency);
     }
 }

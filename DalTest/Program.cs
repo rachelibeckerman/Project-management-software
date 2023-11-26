@@ -259,7 +259,7 @@ internal class Program
         Console.WriteLine(foundTask);
         Console.WriteLine("Enter values to update,");
         Console.WriteLine("Enter updated Task's Description:");
-        string Description = Console.ReadLine();
+        string? Description = Console.ReadLine();
         if (string.IsNullOrEmpty(Description))
             Description = foundTask.Description;
         Console.WriteLine("Enter updated Task's Alias:");
@@ -275,30 +275,45 @@ internal class Program
         if(CreatedAt == DateTime.MinValue)
             CreatedAt = foundTask!.CreatedAt;
         Console.WriteLine("Enter updated Task's Start date:");
-        DateTime Start;
-        DateTime.TryParse(Console.ReadLine() , out Start);
-        if (Start == DateTime.MinValue)
-            Start = (DateTime)foundTask.Start;
+        DateTime Start1;
+        DateTime? Start;
+        DateTime.TryParse(Console.ReadLine() , out Start1);
+        if (Start1 == DateTime.MinValue)
+            Start = (DateTime?)foundTask?.Start;
+        else
+            Start = Start1;
         Console.WriteLine("Enter updated Task's ScheduledDate:");
-        DateTime ScheduledDate;
-        DateTime.TryParse(Console.ReadLine() , out ScheduledDate);
-        if (ScheduledDate == DateTime.MinValue)
-            ScheduledDate = (DateTime)foundTask.ScheduledDate;
+        DateTime ScheduledDate1;
+        DateTime? ScheduledDate;
+        DateTime.TryParse(Console.ReadLine() , out ScheduledDate1);
+        if (ScheduledDate1 == DateTime.MinValue)
+            ScheduledDate = (DateTime?)foundTask?.ScheduledDate;
+        else
+            ScheduledDate = ScheduledDate1;
         Console.WriteLine("Enter updated Task's ForecastDate:");
-        DateTime ForecastDate;
-        DateTime.TryParse(Console.ReadLine() , out ForecastDate);
-        if (ForecastDate == DateTime.MinValue)
-            ForecastDate = (DateTime)foundTask.ForecastDate;
+        DateTime ForecastDate1;
+        DateTime? ForecastDate;
+        DateTime.TryParse(Console.ReadLine() , out ForecastDate1);
+        if (ForecastDate1 == DateTime.MinValue)
+            ForecastDate = (DateTime?)foundTask?.ForecastDate;
+        else
+            ForecastDate = ForecastDate1;
         Console.WriteLine("Enter updated Task's Deadline:");
-        DateTime Deadline;
-        DateTime.TryParse(Console.ReadLine(), out Deadline);
-        if (Deadline == DateTime.MinValue)
-            Deadline = (DateTime)foundTask.Deadline;
+        DateTime? Deadline;
+        DateTime Deadline1;
+        DateTime.TryParse(Console.ReadLine(), out Deadline1);
+        if (Deadline1 == DateTime.MinValue)
+            Deadline = (DateTime?)foundTask?.Deadline;
+        else
+            Deadline = Deadline1;
         Console.WriteLine("Enter updated Task's Complete date:");
-        DateTime Complete;
-        DateTime.TryParse(Console.ReadLine(), out Complete);
-        if (Complete == DateTime.MinValue)
-            Complete = (DateTime)foundTask.Complete;
+        DateTime Complete1;
+        DateTime? Complete;
+        DateTime.TryParse(Console.ReadLine(), out Complete1);
+        if (Complete1 == DateTime.MinValue)
+            Complete = (DateTime?)foundTask?.Complete;
+        else
+            Complete = Complete1;
         Console.WriteLine("Enter updated Task's Deliverables:");
         string? Deliverables = Console.ReadLine();
         if(string.IsNullOrEmpty(Deliverables))
@@ -308,18 +323,24 @@ internal class Program
         if(string.IsNullOrEmpty(Remarks))
             Remarks = foundTask!.Remarks;
         Console.WriteLine("Enter updated Task's Engineer Id:");
-        int EngineerId;
-        int.TryParse(Console.ReadLine() , out EngineerId);
-        if (EngineerId == 0)
-            EngineerId =(int)foundTask!.EngineerId;
+        int EngineerId1;
+        int? EngineerId;
+        int.TryParse(Console.ReadLine() , out EngineerId1);
+        if (EngineerId1 == 0)
+            EngineerId =(int?)foundTask?.EngineerId;
+        else
+            EngineerId = EngineerId1;
         Console.WriteLine("Enter updated Task's Complexity Level (1-5):");
-        int ComplexityLevel;
-        int.TryParse(Console.ReadLine() ?? $"{(int)foundTask.ComplexityLevel}", out ComplexityLevel);
-        if (ComplexityLevel == 0)
-            ComplexityLevel = (int)foundTask.ComplexityLevel+1;
+        int? ComplexityLevel;
+        int ComplexityLevel1;
+        int.TryParse(Console.ReadLine() , out ComplexityLevel1);
+        if (ComplexityLevel1 == 0)
+            ComplexityLevel = (int?)foundTask?.ComplexityLevel + 1;
+        else
+            ComplexityLevel = ComplexityLevel1;
         Task newTask = new Task(Id,Description,Alias,Milestone,CreatedAt,Start,ScheduledDate,
                                  ForecastDate,Deadline,Complete,Deliverables,Remarks,EngineerId,
-                                 (EngineerExperience)(ComplexityLevel-1));
+                                 (EngineerExperience?)(ComplexityLevel-1));
         try
         {
             s_dal!.Task.Update(newTask);
