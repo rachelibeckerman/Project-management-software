@@ -32,12 +32,12 @@ internal class TaskImplementation : ITask
         return foundValue != null ? foundValue : null;
     }
 
-    public IEnumerable<Task?> ReadAll(Func<Task?, bool>? filter = null) //stage 2
+    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) //stage 2
     {
         if (filter == null)
-            return DataSource.Tasks.Select(item => item);
+            return DataSource.Tasks?.Select(item => item) ?? new List<Task?>();
         else
-            return DataSource.Tasks.Where(filter);
+            return DataSource.Tasks?.Where(filter) ?? new List<Task?>();
 
     }
 

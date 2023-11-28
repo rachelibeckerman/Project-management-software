@@ -1,6 +1,8 @@
 ﻿using DalApi;
 namespace Dal;
-
+/// <summary>
+/// Defining the basic functions (CRUD). 
+/// </summary>
 //stage 3
 sealed public class DalXml : IDal
 {

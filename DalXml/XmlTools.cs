@@ -4,7 +4,9 @@ using DO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-
+/// <summary>
+/// Functions to convert from a list to an XML element. 
+/// </summary>
 static class XMLTools
 {
     const string s_xml_dir = @"..\xml\";

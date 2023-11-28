@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
-
+/// <summary>
+/// XML Dependency Implementation (CRUD)
+/// </summary>
 internal class DependencyImplementation : IDependency
 {
     const string s_dependency = "dependencies"; //Linq to XML

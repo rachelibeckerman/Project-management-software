@@ -1,5 +1,7 @@
 ﻿namespace Dal;
-
+/// <summary>
+/// Defining running variables.
+/// </summary>
 internal static class Config
 {
 

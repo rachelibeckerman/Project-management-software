@@ -3,7 +3,9 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
-
+/// <summary>
+/// XML Task Implementation (CRUD)
+/// </summary>
 internal class TaskImplementation : ITask
 {
     const string s_tasks = "tasks"; //XML Serializer
@@ -37,7 +39,7 @@ internal class TaskImplementation : ITask
         return foundValue != null ? foundValue : null;
     }
 
-    public IEnumerable<Task?> ReadAll(Func<Task?, bool>? filter = null) //stage 2
+    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) //stage 2
     {
         List<Task> tasksList = XMLTools.LoadListFromXMLSerializer<Task>(s_tasks);
         if (filter == null)

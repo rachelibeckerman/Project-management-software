@@ -4,7 +4,9 @@ using DO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+/// <summary>
+/// XML Engineer Implementation (CRUD)
+/// </summary>
 internal class EngineerImplementation : IEngineer
 {
     const string s_engineer = "engineers"; //XML Serializer
@@ -24,7 +26,7 @@ internal class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).First();
         if (foundValue == null)
         {
@@ -33,30 +35,30 @@ internal class EngineerImplementation : IEngineer
         Engineer copyItem = foundValue with { Status = false };
         engineersList.RemoveAll(eng => eng?.Id == id);
         engineersList.Add(copyItem);
-        XMLTools.SaveListToXMLSerializer<Engineer>(engineersList, s_engineer);
+        XMLTools.SaveListToXMLSerializer<Engineer>(engineersList!, s_engineer);
     }
 
     public Engineer? Read(int id)
     {
-        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         Engineer? foundValue = engineersList.Where(eng => eng?.Id == id).FirstOrDefault();
         return foundValue != null ? foundValue : null;
     }
 
     public Engineer? Read(Func<Engineer, bool> filter)
     {
-        List<Engineer?> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
-        Engineer? foundValue = engineersList.Where(filter).First();
+        List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
+        Engineer? foundValue = engineersList.Where(filter!).First();
         return foundValue != null ? foundValue : null;
     }
 
-    public IEnumerable<Engineer?> ReadAll(Func<Engineer?, bool>? filter = null) //stage 2
+    public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null) //stage 2
     {
         List<Engineer> engineersList = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
         if (filter == null)
             return engineersList.Select(item => item);
         else
-            return engineersList.Where(filter);
+            return engineersList.Where(filter!);
 
     }
     public void Update(Engineer item)
@@ -69,7 +71,7 @@ internal class EngineerImplementation : IEngineer
         }
         engineersList.RemoveAll(eng => eng?.Id == item.Id);
         engineersList.Add(item);
-        XMLTools.SaveListToXMLSerializer<Engineer>(engineersList, s_engineer);
+        XMLTools.SaveListToXMLSerializer<Engineer>(engineersList!, s_engineer);
     }
 
 }
