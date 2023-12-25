@@ -7,8 +7,8 @@ namespace BO;
 public class Milestone
 {
     public int Id { get; init; } 
-    public string Description { get; set; }
-    public string Alias { get; set; }
+    public required string Description { get; set; }
+    public required string Alias { get; set; }
     public DateTime CreatedAtDate { get; set; }
     public BO.Status Status { get; set; }
     public DateTime? start { get; set; }
@@ -17,5 +17,5 @@ public class Milestone
     public DateTime? Complete { get; set; }
     public Double? CompletionPercentage { get; set; }
     public string? Remarks { get; set; }
-    public List<TaskInList> Dependecies { get; set; }
+    public List<TaskInList>? Dependecies { get; set; }
 }

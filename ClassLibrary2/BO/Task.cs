@@ -5,12 +5,12 @@
 public class Task
 {
     public int Id { get; init; }
-    public string Description { get; set; }
-    public string Alias { get; set; }
+    public  required string Description { get; set; }
+    public required string Alias { get; set; }
     public DateTime CreatedAt { get; set; }
     public BO.Status? Status { get; set; }
-    public List<TaskInList> Dependencies { get; set; }
-    public BO.MilestoneInTask Milestone {get; set;}
+    public List<TaskInList>? Dependencies { get; set; }
+    public BO.MilestoneInTask? Milestone {get; set;}
     public TimeSpan RequiredEffortTime { get; set; }
     public DateTime? Start { get; set; }
     public DateTime? ScheduledDate { get; set; }

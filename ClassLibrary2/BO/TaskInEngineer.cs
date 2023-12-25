@@ -2,8 +2,8 @@
 /// <summary>
 /// TaskInEngineer entity defenition
 /// </summary>
-internal class TaskInEngineer
+public class TaskInEngineer
 {
     public int Id { get; init; }
-    public string Alias { get; set; }
+    public required string  Alias { get; set; }
 }
