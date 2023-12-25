@@ -1,25 +1,25 @@
 ﻿namespace BO;
-
+/// <summary>
+/// Task entity defenition
+/// </summary>
 public class Task
 {
     public int Id { get; init; }
     public string Description { get; set; }
     public string Alias { get; set; }
     public DateTime CreatedAt { get; set; }
-    public  BO.Status? Status { get; set;}
+    public BO.Status? Status { get; set; }
+    public List<TaskInList> Dependencies { get; set; }
+    public BO.MilestoneInTask Milestone {get; set;}
+    public TimeSpan RequiredEffortTime { get; set; }
+    public DateTime? Start { get; set; }
+    public DateTime? ScheduledDate { get; set; }
+    public DateTime? ForecastDate { get; set; }
+    public DateTime? Deadline { get; set; }
+    public DateTime? Complete { get; set; }
+    public string? Deliverables { get; set; }
+    public string? Remarks { get; set; }
+    public BO.EngineerInTask? Engineer { get; set; }
+    public BO.EngineerExperience? Copmlexity { get; set; }
 
-    //int Id,
-    //string Description,
-    //string Alias,
-    //bool Milestone,
-    //DateTime CreatedAt,
-    //DateTime? Start,
-    //DateTime? ScheduledDate,
-    //DateTime? ForecastDate,
-    //DateTime? Deadline,
-    //DateTime? Complete,
-    //string? Deliverables,
-    //string? Remarks,
-    //int? EngineerId,
-    //EngineerExperience? ComplexityLevel
 }
