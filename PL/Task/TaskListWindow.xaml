@@ -6,7 +6,23 @@
         xmlns:local="clr-namespace:PL.Task"
         mc:Ignorable="d"
         Title="TaskListWindow" Height="450" Width="800">
+    <!--Extrnal Grid-->
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!--Internal, Upper Grid-->
+        <Grid Height="auto" Width="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
     </Grid>
+
+
+
 </Window>
