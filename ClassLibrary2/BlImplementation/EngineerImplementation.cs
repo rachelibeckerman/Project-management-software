@@ -8,7 +8,33 @@ internal class EngineerImplementation : IEngineer
     private DalApi.IDal _dal = DalApi.Factory.Get;
     public void Create(BO.Engineer engineer)
     {
-        throw new NotImplementedException();
+
+        if (engineer.Name is null || engineer.Name == "" || engineer.Email is null || engineer.Email == "")
+            throw new BO.BlNullPropertyException("name or email was not valid");
+        if (engineer.Id <= 0 || engineer.Cost <= 0)
+            throw new BO.BlInvalidInputException("Id or cost is not valid");
+
+        DO.Engineer doEngineer = new DO.Engineer(engineer.Id, engineer.Name!,
+                        engineer.Email!, (DO.Level)engineer.Level, engineer.Cost);
+        //trying to create engineer
+        try
+        {
+            _dal.Engineer.Create(doEngineer);
+        }
+        catch (DO.DalAlreadyExistsException ex)
+        {
+            throw new BO.BlAlreadyExistException($"Engineer with ID={engineer.Id} already exists", ex);
+        }
+
+        //checking if engineers task exists and updating it
+        if (engineer.Task is not null)
+            try
+            {
+                _dal.Task.Update(_dal.Task.Read(engineer.Task.Id) with { EngineerId = engineer.Id });
+            }
+            catch (DO.DalDoesNotExistException ex) { throw new BO.BlDoesNotExistException($"Task with ID={engineer.Id} was not found", ex); }
+
+        return engineer.Id;
     }
 
     public void delete(int id)
