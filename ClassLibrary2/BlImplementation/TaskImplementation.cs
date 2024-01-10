@@ -1,10 +1,11 @@
-﻿namespace BIImplementation;
-using BIApi;
+﻿namespace BlImplementation;
+using BlApi;
 using System.Collections.Generic;
 
-internal class TaskImplementation : BO.ITask
+internal class TaskImplementation : ITask
 {
-    private DalApi.IDal _dal = Factory.Get;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
+             
     public int Create(BO.Task task)
     {
         throw new NotImplementedException();

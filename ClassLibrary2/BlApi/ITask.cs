@@ -1,4 +1,4 @@
-﻿namespace BIApi;
+﻿namespace BlApi;
 
 public interface ITask
 {

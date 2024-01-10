@@ -1,9 +1,9 @@
-﻿namespace BIImplementation;
-using BIApi;
+﻿namespace BlImplementation;
+using BlApi;
 
-internal class MilestoneImplementation : BO.IMilestone
+internal class MilestoneImplementation : IMilestone
 {
-    private DalApi.IDal _dal = Factory.Get;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
     public void create()
     {
         throw new NotImplementedException();

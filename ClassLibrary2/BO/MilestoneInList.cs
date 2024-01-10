@@ -10,4 +10,5 @@ internal class MilestoneInList
     public DateTime? CreateAt { get; set; }
     public Status Status { get; set; }
     public double? CompletionPercentage { get; set; }
+    public override string ToString() => Tools.ToStringProperty(this);
 }

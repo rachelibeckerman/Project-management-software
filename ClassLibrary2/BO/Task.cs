@@ -21,5 +21,6 @@ public class Task
     public string? Remarks { get; set; }
     public BO.EngineerInTask? Engineer { get; set; }
     public BO.EngineerExperience? Copmlexity { get; set; }
+    public override string ToString() => Tools.ToStringProperty(this);
 
 }

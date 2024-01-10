@@ -98,7 +98,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception) { throw; }
     }
     private static void ReadEngineer()
     {
@@ -110,10 +110,10 @@ internal class Program
     }
     private static void ReadAllEngineers()
     {
-        IEnumerable<Engineer>? engineers = s_dal!.Engineer.ReadAll();
-        foreach (Engineer engineer in engineers)
+        IEnumerable<Engineer?> engineers = s_dal!.Engineer.ReadAll();
+        foreach (Engineer? engineer in engineers)
         {
-            if (engineer.Status == true) Console.WriteLine(engineer);
+            if (engineer?.Status == true) Console.WriteLine(engineer);
         }
     }
     private static void UpdateEngineer()
@@ -136,12 +136,12 @@ internal class Program
         int level;
         int.TryParse(Console.ReadLine(), out level);
         if(level == 0)
-            level = (int)foundEngineer.Level+1;
+            level = (int)foundEngineer!.Level+1;
         Console.WriteLine("Enter updated Engineer's Cost.");
         double cost;
         double.TryParse(Console.ReadLine(), out cost);
         if (cost == 0)
-            cost = foundEngineer.Cost;
+            cost = foundEngineer!.Cost;
         Engineer newEngineer = new Engineer(Id,name, email, (EngineerExperience)(level-1), (double)cost);
         try
         {
@@ -150,7 +150,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ) { throw ; }
 
     }
     private static void DeleteEngineer()
@@ -165,7 +165,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ) { throw ; }
     }
     private static void TaskMenu()
     {
@@ -235,7 +235,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ) { throw ; }
     }
     private static void ReadTask()
     {
@@ -247,8 +247,8 @@ internal class Program
     }
     private static void ReadAllTasks()
     {
-        IEnumerable<Task>? tasks = s_dal!.Task.ReadAll();
-        foreach (Task task in tasks)
+        IEnumerable<Task?> tasks = s_dal!.Task.ReadAll();
+        foreach (Task? task in tasks)
         {
             Console.WriteLine(task);
         }
@@ -264,7 +264,7 @@ internal class Program
         Console.WriteLine("Enter updated Task's Description:");
         string? Description = Console.ReadLine();
         if (string.IsNullOrEmpty(Description))
-            Description = foundTask.Description;
+            Description = foundTask!.Description;
         Console.WriteLine("Enter updated Task's Alias:");
         string? Alias = Console.ReadLine();
         if (string.IsNullOrEmpty(Alias))
@@ -351,7 +351,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception) { throw; }
     }
     private static void DeleteTask()
     {
@@ -365,7 +365,7 @@ internal class Program
         catch (DalAlreadyExistsException ex) { throw ex; }
         catch (DalDeletionImpossible ex) { throw ex; }
         catch (DalDoesNotExistException ex) { throw ex; }
-        catch (Exception ex) { throw ex; }
+        catch (Exception) { throw; }
     }
     private static void DependencyMenu()
     {
@@ -488,7 +488,8 @@ internal class Program
     {
         try
         {
-            Initialization.Do(s_dal); //stage 2
+            //Initialization.Do(s_dal); //stage 2
+            Initialization.Do(); //stage 4
             MainMenu();
         }
         catch (DalAlreadyExistsException ex) { Console.WriteLine(ex.Message); }

@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="800">
     <Grid>
-
+        <!--btn to handle engineers-->
+        <Button Content="Handle Engineers" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="80" Width="150" Click="BtnHandleEngineers_Click" Margin="180,0,0,0"/>
+        <!--btn initialize the Database -->
+        <Button Content="Database initialization" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="80" Width="150" Margin="470,0,0,0" Click="BtnDatabaseInitialization_Click"/>
     </Grid>
 </Window>
