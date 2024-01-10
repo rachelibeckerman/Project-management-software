@@ -25,7 +25,7 @@ namespace PL.Engineer
         {
             InitializeComponent();
             var temp = s_bl?.Engineer.ReadAll();
-            EngineersList = temp == null ? new() : new(temp);
+            EngineersList = temp == null ? new() : new(temp!);
         }
         public ObservableCollection<BO.Engineer> EngineersList
         {
@@ -35,5 +35,15 @@ namespace PL.Engineer
         public static readonly DependencyProperty EngineersListProperty =
         DependencyProperty.Register("EngineersList", typeof(ObservableCollection<BO.Engineer>),
         typeof(EngineerListWindow), new PropertyMetadata(null));
+
+        public BO.EngineerExperience level { get; set; } = BO.EngineerExperience.All;
+
+        private void ComboBoxEngineerLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var temp = level == BO.EngineerExperience.All
+                                ? s_bl?.Engineer.ReadAll()
+                                : s_bl?.Engineer.ReadAll(item => item.Level == (DO.EngineerExperience)level);
+            EngineersList = temp == null ? new() : new(temp!);
+        }
     }
 }
