@@ -56,6 +56,8 @@
             <TextBox  Grid.Row="5" Text="{Binding Task.Id, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"  Margin="46,5,0,25" />
             <Label Content="Alias:"  Grid.Row="5"  Width="40" Height="30" Margin="1,30,149,-10"/>
             <TextBox Grid.Row="5" Text="{Binding Task.Alias, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}" Margin="46,31,0,-1" />
+            
+            
         </Grid>
         <Button Grid.Column="3" Content="{Binding Id , Mode=OneTime ,Converter={StaticResource ConverIdToContentKey}}"
                 HorizontalAlignment="Right" Grid.Row="1" 

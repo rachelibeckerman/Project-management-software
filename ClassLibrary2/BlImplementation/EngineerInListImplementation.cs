@@ -6,8 +6,13 @@ using System.Reflection.Metadata.Ecma335;
 internal class EngineerInListImplementation : IEngineerInList
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
-  
 
+    /// <summary>
+    /// read a single engineerInList
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>BO.EngineerInList? </returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public BO.EngineerInList? Read(int id)
     {
             DO.Engineer? dalEngineer = _dal.Engineer.Read(id);
@@ -22,7 +27,11 @@ internal class EngineerInListImplementation : IEngineerInList
             };
             return blEngineer;
     }
-
+    /// <summary>
+    /// read all engineerInList
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns>m IEnumerable<BO.EngineerInList> </returns>
     public IEnumerable<BO.EngineerInList?> ReadAll(Func<DO.Engineer, bool>? filter = null)
     {
         IEnumerable<DO.Engineer> dalEngineers = _dal.Engineer.ReadAll(filter)!;

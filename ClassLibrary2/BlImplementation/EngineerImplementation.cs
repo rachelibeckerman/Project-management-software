@@ -22,7 +22,7 @@ internal class EngineerImplementation : IEngineer
         {
             throw new BO.BlAlreadyExistException($"Engineer with ID={engineer.Id} already exists", ex);
         }
-        if (engineer.TaskI is not null)
+        if (engineer.Task is not null)
             try
             {
                 _dal.Task.Update(_dal.Task.Read(engineer.Task.Id)! with { EngineerId = engineer.Id });
@@ -85,6 +85,7 @@ internal class EngineerImplementation : IEngineer
                                                select Read(doEngineer.Id);
         return blEngineers;
     }
+
 
     public void Update(BO.Engineer engineer)
     {
