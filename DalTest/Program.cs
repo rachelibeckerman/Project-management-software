@@ -1,7 +1,6 @@
 ﻿namespace DalTest;
 using DalApi;
 using DO;
-using DalList;
 using Dal;
 using System.Diagnostics;
 using System.Reflection.Emit;

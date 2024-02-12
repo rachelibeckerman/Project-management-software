@@ -26,6 +26,7 @@ namespace PL.Engineer
             InitializeComponent();
             var temp = s_bl?.Engineer.ReadAll();
             EngineersList = temp == null ? new() : new(temp!);
+
         }
         public ObservableCollection<BO.Engineer> EngineersList
         {
@@ -44,6 +45,27 @@ namespace PL.Engineer
                                 ? s_bl?.Engineer.ReadAll()
                                 : s_bl?.Engineer.ReadAll(item => item.Level == (DO.EngineerExperience)level);
             EngineersList = temp == null ? new() : new(temp!);
+        }
+
+        private void Button_ClickAddEngineer(object sender, RoutedEventArgs e)
+        {
+            Window enWindow = new EngineerWindow();
+
+            enWindow.ShowDialog();
+
+/*            var temp = s_bl?.Engineer.ReadAll();
+            EngineersList = temp == null ? new() : new(temp!);
+*/
+        }
+
+
+        //
+
+        //
+        private void OnClickUpdateEngineer(object sender, RoutedEventArgs e)
+        {
+            BO.Engineer? engineerInList = (sender as ListView)?.SelectedItem as BO.Engineer;
+            new EngineerWindow(engineerInList!.Id).ShowDialog();
         }
     }
 }

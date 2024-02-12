@@ -6,31 +6,26 @@ using System.Reflection.Metadata.Ecma335;
 internal class EngineerImplementation : IEngineer
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
-    public void Create(BO.Engineer engineer)
+    public int Create(BO.Engineer engineer)
     {
-
         if (engineer.Name is null || engineer.Name == "" || engineer.Email is null || engineer.Email == "")
-            throw new BO.BlNullPropertyException("name or email was not valid");
+            throw new BO.BlNullPropertyException("missing name or email");
         if (engineer.Id <= 0 || engineer.Cost <= 0)
-            throw new BO.BlInvalidInputException("Id or cost is not valid");
+            throw new BO.BlInvalidInputException("negative id or cost");
 
-        DO.Engineer doEngineer = new DO.Engineer(engineer.Id, engineer.Name!,
-                        engineer.Email!, (DO.Level)engineer.Level, engineer.Cost);
-        //trying to create engineer
+        DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!, engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
         try
         {
-            _dal.Engineer.Create(doEngineer);
+            _dal.Engineer.Create(newDoEngineer);
         }
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new BO.BlAlreadyExistException($"Engineer with ID={engineer.Id} already exists", ex);
         }
-
-        //checking if engineers task exists and updating it
         if (engineer.Task is not null)
             try
             {
-                _dal.Task.Update(_dal.Task.Read(engineer.Task.Id) with { EngineerId = engineer.Id });
+                _dal.Task.Update(_dal.Task.Read(engineer.Task.Id)! with { EngineerId = engineer.Id });
             }
             catch (DO.DalDoesNotExistException ex) { throw new BO.BlDoesNotExistException($"Task with ID={engineer.Id} was not found", ex); }
 
@@ -39,7 +34,20 @@ internal class EngineerImplementation : IEngineer
 
     public void delete(int id)
     {
-        throw new NotImplementedException();
+        try
+        {           
+            bool EngineerHasTask = false;
+            IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+            allTasks.FirstOrDefault(task => task.EngineerId == id ? EngineerHasTask = true : EngineerHasTask);
+            if (!EngineerHasTask)
+                _dal.Engineer.Delete(id);
+            else
+                throw new BO.BlDeletionImpossibleException($"Engineer with ID={id} can not be deleted");
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} was not found", ex);
+        }
     }
 
     public BO.Engineer? Read(int id)
@@ -80,6 +88,19 @@ internal class EngineerImplementation : IEngineer
 
     public void Update(BO.Engineer engineer)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (engineer.Name is null || engineer.Name == "" || engineer.Email is null || engineer.Email == "")
+                throw new BO.BlNullPropertyException("missing name or email");
+            if (engineer.Id <= 0 || engineer.Cost <= 0)
+                throw new BO.BlInvalidInputException("negative id or cost");
+
+            DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!,engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
+            _dal.Engineer.Update(newDoEngineer);
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Engineer with ID={engineer.Id} does not exists", ex);
+        }
     }
 }

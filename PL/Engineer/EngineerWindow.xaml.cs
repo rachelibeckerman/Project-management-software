@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BO;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace PL.Engineer
     public partial class EngineerWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
         public EngineerWindow(int Id = 0)
         {
             InitializeComponent();
@@ -42,19 +44,33 @@ namespace PL.Engineer
 
         private void BtnAddOrUpdateEngineer_Click(object sender, RoutedEventArgs e)
         {
-            CurrentEngineer.Task = null;
-            string content = (sender as Button)!.Content.ToString()!;//finding state of window - add/update
-            if (content == "Add")
+            try
             {
-                s_bl.Engineer.Create(CurrentEngineer);//tries to create engineer
-                MessageBox.Show($"Engineer with id={CurrentEngineer.Id} was successfully addded!");
+                CurrentEngineer.Task = null;
+                string content = (sender as Button)!.Content.ToString()!;//add/update
+                if (content == "Add")
+                {
+                    s_bl.Engineer.Create(CurrentEngineer);//create Bo.Engineer
+                    MessageBox.Show($"Engineer with id={CurrentEngineer.Id} added");
+                }
+                else
+                {
+                    s_bl.Engineer.Update(CurrentEngineer);//update Bo.Engineer
+                    MessageBox.Show($"Engineer with id={CurrentEngineer.Id} updated!");
+
+                }
+                this.Close();//close add/update windows 
+
+                //
+
+                //
+
             }
-            else
-            {
-                s_bl.Engineer.Update(CurrentEngineer);//tries to update engineer
-                MessageBox.Show($"Engineer with id={CurrentEngineer.Id} was successfully updated!");
-            }
-            this.Close();
+            catch (BO.BlInvalidInputException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch (BO.BlAlreadyExistException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch (BO.BlDoesNotExistException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch (BO.BlNullPropertyException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch { MessageBox.Show("Oops! something went wrong"); }
         }
     }
 }

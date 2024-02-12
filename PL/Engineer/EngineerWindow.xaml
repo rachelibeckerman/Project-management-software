@@ -42,7 +42,7 @@
                 <RowDefinition Height="50*"/>
                 <RowDefinition Height="50*"/>
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" IsEnabled="{Binding Id , Mode=OneTime , Converter ={StaticResource ConvertIdToContentKey}}"                      Text ="{Binding Id , Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <TextBox Grid.Row="0" IsEnabled="{Binding Id , Mode=OneTime , Converter ={StaticResource ConvertIdToIsEnableKey}}"                      Text ="{Binding Id , Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
             <TextBox Grid.Row="1" Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
             <TextBox Grid.Row="2" Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
             <ComboBox Grid.Row="3" Height="40" 
@@ -50,6 +50,8 @@
                       SelectedValue="{Binding Level, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"/>
             <TextBox Grid.Row="4" Text="{Binding Cost, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
         </Grid>
-        <Button Grid.Column="3" Content="{Binding Id , Mode=OneTime ,Converter={StaticResource ConvertIdToContentKey}}" HorizontalAlignment="Right" Grid.Row="2" VerticalAlignment="Stretch"  Width="121" Click="BtnAddOrUpdateEngineer_Click" />
+        <Button Grid.Column="3" Content="{Binding Id , Mode=OneTime ,Converter={StaticResource ConverIdToContentKey}}"
+                HorizontalAlignment="Right" Grid.Row="2" VerticalAlignment="Stretch" 
+                Width="121" Click="BtnAddOrUpdateEngineer_Click" />
     </Grid>
 </Window>

@@ -29,14 +29,15 @@
                       SelectionChanged="ComboBoxEngineerLevel_SelectionChanged"/>
         </Grid>
         <!--display engineers list-->
-        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding EngineersList}">
+        <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding EngineersList}" MouseDoubleClick="OnClickUpdateEngineer">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="Button_ClickAddEngineer"/>
     </Grid>
 
 </Window>
