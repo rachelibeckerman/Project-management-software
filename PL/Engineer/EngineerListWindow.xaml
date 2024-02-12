@@ -7,13 +7,13 @@
         mc:Ignorable="d"
         Title="EngineerListWindow" Height="640" Width="800"
         DataContext = "{Binding RelativeSource={RelativeSource Mode=Self}}">
-   
+
     <!--Extrnal Grid-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="60*"/>
         </Grid.RowDefinitions>
         <!--Internal, Upper Grid-->
         <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
@@ -36,8 +36,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="Button_ClickAddEngineer"/>
+
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="40" Width="100" Click="Button_ClickAddEngineer" Margin="0,4,0,9"/>
     </Grid>
 
 </Window>

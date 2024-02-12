@@ -23,7 +23,7 @@ namespace PL.Engineer
     public partial class EngineerWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+ 
         public EngineerWindow(int Id = 0)
         {
             InitializeComponent();
@@ -42,6 +42,7 @@ namespace PL.Engineer
         typeof(EngineerWindow), new PropertyMetadata(null));
         public BO.EngineerExperience level { get; set; } = BO.EngineerExperience.All;
 
+        public event EventHandler ProductUpdatedAdd;
         private void BtnAddOrUpdateEngineer_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -52,18 +53,17 @@ namespace PL.Engineer
                 {
                     s_bl.Engineer.Create(CurrentEngineer);//create Bo.Engineer
                     MessageBox.Show($"Engineer with id={CurrentEngineer.Id} added");
+                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
                     s_bl.Engineer.Update(CurrentEngineer);//update Bo.Engineer
                     MessageBox.Show($"Engineer with id={CurrentEngineer.Id} updated!");
-
+                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);
                 }
                 this.Close();//close add/update windows 
 
-                //
-
-                //
+    
 
             }
             catch (BO.BlInvalidInputException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
