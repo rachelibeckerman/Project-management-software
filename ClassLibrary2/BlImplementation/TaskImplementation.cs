@@ -1,7 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
-using DO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +22,21 @@ internal class TaskImplementation : ITask
 
         try
         {
-
+            if (task.Engineer is not null && task.Engineer.Id != 0)
+            {
+                IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+                DO.Task? newDoTask = (from newTask in allTasks
+                                      where newTask.EngineerId == task.Engineer.Id
+                                      select newTask).FirstOrDefault();
+                if (newDoTask != null && newDoTask.Id != task.Id)
+                {
+                    throw new BO.BlAlreadyExistException("Engineer is busy");
+                }
+                if (_dal.Engineer.Read(task.Engineer.Id) == null)
+                {
+                    throw new BO.BlDoesNotExistException("Engineer was not found");
+                }
+            }
             _dal.Task.Create(doTask);
         }
         catch (DO.DalAlreadyExistsException ex)
@@ -146,12 +159,22 @@ internal class TaskImplementation : ITask
             throw new BO.BlInvalidInputException("not valid dates");
         try
         {
-            DO.Task newDoTask = ConvertBoTaskToDoTask(task);
             if (task.Engineer is not null && task.Engineer.Id != 0)
+            {
+                IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+                DO.Task? doTask = (from newTask in allTasks
+                                      where newTask.EngineerId == task.Engineer.Id
+                                      select newTask).FirstOrDefault();
+                if (doTask != null && doTask.Id != task.Id)
+                {
+                    throw new BO.BlAlreadyExistException("Engineer is busy");
+                }
                 if (_dal.Engineer.Read(task.Engineer.Id) == null)
                 {
                     throw new BO.BlDoesNotExistException("Engineer was not found");
                 }
+            }
+            DO.Task newDoTask = ConvertBoTaskToDoTask(task);
             _dal.Task.Update(newDoTask);
         }
         catch (DO.DalDoesNotExistException ex)
