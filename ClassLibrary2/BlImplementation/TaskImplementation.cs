@@ -20,8 +20,10 @@ internal class TaskImplementation : ITask
             throw new BO.BlInvalidInputException("not valid dates");
 
         DO.Task doTask = ConvertBoTaskToDoTask(task);
+
         try
         {
+
             _dal.Task.Create(doTask);
         }
         catch (DO.DalAlreadyExistsException ex)
@@ -80,7 +82,7 @@ internal class TaskImplementation : ITask
             Complete = task.Complete,
             Deliverables = task.Deliverables,
             Remarks = task.Remarks,
-            Engineer = null,
+            Engineer = new BO.EngineerInTask() { Id = 0, Name = "" },
             ComplexityLevel = (BO.EngineerExperience?)task.ComplexityLevel,
         };
         int engineerId = task.EngineerId ?? 0;
@@ -109,9 +111,12 @@ internal class TaskImplementation : ITask
         }
     }
 
-    public IEnumerable<System.Threading.Tasks.Task> ReadAll()
+    public IEnumerable<BO.Task> ReadAll(Func<DO.Task, bool>? filter = null)
     {
-        throw new NotImplementedException();
+        IEnumerable<DO.Task> allDoTasks = _dal.Task.ReadAll(filter)!;
+        IEnumerable<BO.Task> tasks = from task in allDoTasks
+                                     select Read(task.Id);
+        return tasks;
     }
     private DO.Task ConvertBoTaskToDoTask(BO.Task task)
     {
@@ -142,13 +147,13 @@ internal class TaskImplementation : ITask
         try
         {
             DO.Task newDoTask = ConvertBoTaskToDoTask(task);
-            if (task.Engineer is not null)
+            if (task.Engineer is not null && task.Engineer.Id != 0)
                 if (_dal.Engineer.Read(task.Engineer.Id) == null)
                 {
                     throw new BO.BlDoesNotExistException("Engineer was not found");
                 }
-        _dal.Task.Update(newDoTask);
-    }
+            _dal.Task.Update(newDoTask);
+        }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Task with Id={task.Id} was not found", ex);

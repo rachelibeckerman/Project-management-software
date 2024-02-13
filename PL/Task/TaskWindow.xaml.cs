@@ -91,7 +91,6 @@ namespace PL.Task
             catch (BO.BlNullPropertyException ex) { MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error); }
             catch { MessageBox.Show("Oops! something went wrong"); }
         }
-
      
     }
 };

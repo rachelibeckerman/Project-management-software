@@ -17,6 +17,14 @@ internal class EngineerImplementation : IEngineer
         DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!, engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
         try
         {
+            IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+            DO.Task? newDoTask = (from task in allTasks
+                                  where task.EngineerId == engineer.Id
+                                  select task).FirstOrDefault();
+            if (newDoTask != null && engineer.Task != null && newDoTask.Id != engineer.Task!.Id)
+            {
+                _dal.Task.Update(_dal.Task.Read(newDoTask!.Id)! with { EngineerId = null });
+            }
             _dal.Engineer.Create(newDoEngineer);
         }
         catch (DO.DalAlreadyExistsException ex)
@@ -36,7 +44,7 @@ internal class EngineerImplementation : IEngineer
     public void delete(int id)
     {
         try
-        {           
+        {
             bool EngineerHasTask = false;
             IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
             allTasks.FirstOrDefault(task => task.EngineerId == id ? EngineerHasTask = true : EngineerHasTask);
@@ -53,30 +61,30 @@ internal class EngineerImplementation : IEngineer
 
     public BO.Engineer? Read(int id)
     {
-            DO.Engineer? dalEngineer = _dal.Engineer.Read(id);
-            if(dalEngineer == null)
-                throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exist");
-            BO.Engineer blEngineer = new BO.Engineer 
-            {
-                Id = id,
-                Name = dalEngineer.Name,
-                Email = dalEngineer.Email,
-                Level = (BO.EngineerExperience)dalEngineer.Level,
-                Cost = dalEngineer.Cost,
-                Task = new TaskInEngineer() { Id = 0, Alias = "" }
-            };
+        DO.Engineer? dalEngineer = _dal.Engineer.Read(id);
+        if (dalEngineer == null)
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exist");
+        BO.Engineer blEngineer = new BO.Engineer
+        {
+            Id = id,
+            Name = dalEngineer.Name,
+            Email = dalEngineer.Email,
+            Level = (BO.EngineerExperience)dalEngineer.Level,
+            Cost = dalEngineer.Cost,
+            Task = new TaskInEngineer() { Id = 0, Alias = "" }
+        };
 
-            IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
-            DO.Task? engineersTask = (from task in allTasks
-                                      where task.EngineerId == id 
-                                      select task).FirstOrDefault();
-            if (engineersTask != null)
-            {
-                BO.TaskInEngineer taskEngineer = new BO.TaskInEngineer { Id = engineersTask.Id, Alias = engineersTask.Alias };
-                blEngineer.Task = taskEngineer;
-            }
-            return blEngineer;
-       
+        IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+        DO.Task? engineersTask = (from task in allTasks
+                                  where task.EngineerId == id
+                                  select task).FirstOrDefault();
+        if (engineersTask != null)
+        {
+            BO.TaskInEngineer taskEngineer = new BO.TaskInEngineer { Id = engineersTask.Id, Alias = engineersTask.Alias };
+            blEngineer.Task = taskEngineer;
+        }
+        return blEngineer;
+
     }
 
     public IEnumerable<BO.Engineer?> ReadAll(Func<DO.Engineer, bool>? filter = null)
@@ -99,11 +107,24 @@ internal class EngineerImplementation : IEngineer
             if (engineer.Task is not null)
                 try
                 {
-                    _dal.Task.Update(_dal.Task.Read(engineer.Task.Id)! with { EngineerId = engineer.Id });
+                    DO.Task? task = _dal.Task.Read(engineer.Task.Id);
+                    if (task == null)
+                    {
+                        throw new BO.BlDoesNotExistException($"Task was not found");
+                    }
+                    IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
+                    DO.Task? newDoTask = (from newTask in allTasks
+                                          where newTask.EngineerId == engineer.Id
+                                          select newTask).FirstOrDefault();
+                    if (newDoTask != null && newDoTask.Id != engineer.Task.Id)
+                    {
+                        _dal.Task.Update(_dal.Task.Read(newDoTask!.Id)! with { EngineerId = null });
+                    }
+                    _dal.Task.Update(task! with { EngineerId = engineer.Id });
                 }
                 catch (DO.DalDoesNotExistException ex) { throw new BO.BlDoesNotExistException($"Task with ID={engineer.Id} was not found", ex); }
 
-            DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!,engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
+            DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!, engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
             _dal.Engineer.Update(newDoEngineer);
         }
         catch (DO.DalDoesNotExistException ex)

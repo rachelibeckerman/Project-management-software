@@ -1,5 +1,7 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
+
 internal class Bl : IBl
 {
     public IEngineer Engineer => new EngineerImplementation();
@@ -13,5 +15,7 @@ internal class Bl : IBl
     public ITaskInEngineer TaskInEngineer => new TaskInEngineerImplementation();
 
     public ITaskInList TaskInList => new TaskInListImplementation();
+
+    public IEngineerInTask EngineerInTask => new EngineerInTaskImplementation();
 }
  

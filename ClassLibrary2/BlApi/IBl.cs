@@ -1,4 +1,6 @@
-﻿namespace BlApi;
+﻿using BO;
+
+namespace BlApi;
 
 public interface IBl
 {
@@ -8,4 +10,5 @@ public interface IBl
     public IEngineerInList EngineerInList { get; }
     public ITaskInEngineer TaskInEngineer { get; }
     public ITaskInList TaskInList { get; }
+    public IEngineerInTask EngineerInTask { get; }
 }

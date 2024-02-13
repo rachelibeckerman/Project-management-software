@@ -8,12 +8,15 @@
         Title="EngineerWindow" Height="450" Width="800"
         DataContext="{Binding CurrentEngineer, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/image/background.jpg" Stretch="UniformToFill" Opacity="0.25"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="190*" />
-            <ColumnDefinition Width="190*" />
-            <ColumnDefinition Width="40*" />
-            <ColumnDefinition Width="190*" />
-            <ColumnDefinition Width="190*" />
+            <ColumnDefinition Width="175*" />
+            <ColumnDefinition Width="37*" />
+            <ColumnDefinition Width="18*" />
+            <ColumnDefinition Width="95*" />
+            <ColumnDefinition Width="75*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50*"/>

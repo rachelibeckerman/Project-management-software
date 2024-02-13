@@ -10,6 +10,9 @@
 
     <!--Extrnal Grid-->
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/image/background.jpg" Stretch="UniformToFill" Opacity="0.25"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>

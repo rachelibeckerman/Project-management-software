@@ -6,15 +6,19 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="800">
-    <Grid>
+    <Grid >
+        <Grid.Background>
+            <ImageBrush ImageSource="/image/background.jpg" Stretch="UniformToFill" />
+        </Grid.Background>
         <!--btn to handle engineers-->
         <Button Content="Handle Engineers" HorizontalAlignment="Left"  VerticalAlignment="Top"
-                Height="80" Width="150" Click="BtnHandleEngineers_Click" Margin="475,200,0,0"/>
+                Height="80" Width="150" Click="BtnHandleEngineers_Click" Margin="539,200,0,0"/>
         <!--btn initialize the Database -->
-        <Button Content="Database initialization" HorizontalAlignment="Center"  VerticalAlignment="Top" 
-                Height="50" Width="150" Margin="0,396,0,0" Click="BtnDatabaseInitialization_Click" RenderTransformOrigin="0.599,3.601"/>
+        <Button Content="Database initialization" HorizontalAlignment="Left"  VerticalAlignment="Top" 
+                Height="50" Width="127" Margin="507,396,0,0" Click="BtnDatabaseInitialization_Click" RenderTransformOrigin="0.599,3.601"/>
         <!--btn to handle tasks-->
         <Button Content="Handle Tasks" HorizontalAlignment="Left"  VerticalAlignment="Top"
-                Height="80" Width="150"  Margin="175,200,0,0" Click="BtnHandleTasks_Click"/>
+                Height="80" Width="150"  Margin="355,200,0,0" Click="BtnHandleTasks_Click"/>
+
     </Grid>
 </Window>

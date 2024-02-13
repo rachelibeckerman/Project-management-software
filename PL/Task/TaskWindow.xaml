@@ -5,16 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Task"
         mc:Ignorable="d"
-        Title="TaskWindow" Height="450" Width="800"
+        Title="TaskWindow" Height="600" Width="800"
          DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
     <Grid>
-
+        <Grid.Background>
+            <ImageBrush ImageSource="/image/background.jpg" Stretch="UniformToFill" Opacity="0.2"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40*" />
-            <ColumnDefinition Width="160*" />
+            <ColumnDefinition Width="98*" />
+            <ColumnDefinition Width="131*" />
             <ColumnDefinition Width="180*" />
-            <ColumnDefinition Width="40*" />
-            <ColumnDefinition Width="160*" />
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="121*" />
             <ColumnDefinition Width="180*" />
             <ColumnDefinition Width="40*" />
         </Grid.ColumnDefinitions>
@@ -139,11 +141,11 @@
                     <Style TargetType="DatePickerTextBox">
                         <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
                     </Style>
-                </DatePicker.Resources>            </DatePicker> 
+                </DatePicker.Resources>            </DatePicker>
             <TextBox Grid.Row="6" IsEnabled="False"  Text="{Binding Status, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
         </Grid>
         <Button Grid.Column="5" Content="{Binding Id , Mode=OneTime ,Converter={StaticResource ConverIdToContentKey}}"
-                HorizontalAlignment="Left" Grid.Row="2" 
-                Width="121" Click="BtnAddOrUpdateTask_Click" Margin="0,0,0,10" />
+                HorizontalAlignment="Left" Grid.Row="1" 
+                Width="121" Click="BtnAddOrUpdateTask_Click" Margin="0,454,0,10" Grid.RowSpan="2" />
     </Grid>
 </Window>

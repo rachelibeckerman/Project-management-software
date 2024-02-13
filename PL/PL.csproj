@@ -13,8 +13,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="image\background.jpg" />
+    <None Remove="img\background.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ClassLibrary2\BL.csproj" />
     <ProjectReference Include="..\DalTest\DalTest.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="image\background.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="img\background.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
