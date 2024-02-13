@@ -17,7 +17,7 @@ internal class TaskImplementation : ITask
 
     public void Delete(int id)
     {
-        throw new DalDeletionImpossible($"A Task can't be deleted.");
+        throw new DalDeletionImpossible("A Task can't be deleted.");
     }
 
     public Task? Read(int id)

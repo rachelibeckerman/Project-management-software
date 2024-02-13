@@ -11,7 +11,6 @@ public class Task
     public BO.Status? Status { get; set; }
     public List<TaskInList>? Dependencies { get; set; }
     public BO.MilestoneInTask? Milestone {get; set;}
-    public TimeSpan RequiredEffortTime { get; set; }
     public DateTime? Start { get; set; }
     public DateTime? ScheduledDate { get; set; }
     public DateTime? ForecastDate { get; set; }

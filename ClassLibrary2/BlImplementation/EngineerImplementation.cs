@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 
@@ -62,7 +63,7 @@ internal class EngineerImplementation : IEngineer
                 Email = dalEngineer.Email,
                 Level = (BO.EngineerExperience)dalEngineer.Level,
                 Cost = dalEngineer.Cost,
-                Task = null
+                Task = new TaskInEngineer() { Id = 0, Alias = "" }
             };
 
             IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
@@ -95,6 +96,12 @@ internal class EngineerImplementation : IEngineer
                 throw new BO.BlNullPropertyException("missing name or email");
             if (engineer.Id <= 0 || engineer.Cost <= 0)
                 throw new BO.BlInvalidInputException("negative id or cost");
+            if (engineer.Task is not null)
+                try
+                {
+                    _dal.Task.Update(_dal.Task.Read(engineer.Task.Id)! with { EngineerId = engineer.Id });
+                }
+                catch (DO.DalDoesNotExistException ex) { throw new BO.BlDoesNotExistException($"Task with ID={engineer.Id} was not found", ex); }
 
             DO.Engineer newDoEngineer = new DO.Engineer(engineer.Id, engineer.Name!,engineer.Email!, (DO.EngineerExperience)engineer.Level, engineer.Cost);
             _dal.Engineer.Update(newDoEngineer);

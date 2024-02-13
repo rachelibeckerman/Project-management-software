@@ -4,6 +4,7 @@ using BO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Xml.Linq;
 
 internal class TaskImplementation : ITask
 {
@@ -11,65 +12,96 @@ internal class TaskImplementation : ITask
 
     public int Create(BO.Task task)
     {
-        throw new NotImplementedException();
-    }
+        if (task.Id <= 0 || task.Description is null || task.Description == "")
+            throw new BO.BlNullPropertyException("Id or description was not valid");
+        if (task.CreatedAt > DateTime.Now || task.Deadline < task.ForecastDate)
+            throw new BO.BlInvalidInputException("not valid dates");
 
+        DO.Task doTask = ConvertBoTaskToDoTask(task);
+        try
+        {
+            _dal.Task.Create(doTask);
+        }
+        catch (DO.DalAlreadyExistsException ex)
+        {
+            throw new BO.BlAlreadyExistException($"Task with ID={task.Id} already exists", ex);
+        }
+        return doTask.Id;
+    }
+    private int setStatus(DO.Task task)
+    {
+        try
+        {
+            int status = 0;
+            if (task.Complete is not null)
+                status = 4;
+            else if (task.ForecastDate < DateTime.Now)
+                status = 3;
+            else if (task.Start < DateTime.Now)
+                status = 2;
+            else if (task.ForecastDate is not null)
+                status = 1;
+            else status = 0;
+            return status;
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Task with Id={task.Id} was not found", ex);
+        }
+    }
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+           _dal.Task.Delete(id);
+        }
+        catch (DO.DalDeletionImpossible ex)
+        {
+            throw new BO.BlDeletionImpossibleException("A Task can't be deleted.", ex);
+        }
     }
-    //private BO.Task ConvertFromDOtoBO(DO.Task task)
-    //{
-    //    ///Creating a BO object
-    //    BO.Task boTask = new BO.Task
-    //    {
-    //        Id = task.Id,
-    //        Description = task.Description,
-    //        Alias = task.Alias,
-    //        Milestone = null,
-    //        CreatedAt = task.CreatedAt,
-    //        Status = (BO.Status)setStatus(task.Id),
-    //        Start = task.Start,
-    //        Dependencies = new List<BO.TaskInList>() { },
-    //        ForecastDate = task.ForecastDate,
-    //        Deadline = task.Deadline,
-    //        Complete = task.Complete,
-    //        Deliverables = task.Deliverables,
-    //        Remarks = task.Remarks,
-    //        EngineerId = task.EngineerId,
-           
-    //        Schedual = DateTime.Now,//?????
-    //        ComplexityLevel = (BO.Level)task.ComplexityLevel,
-            
-    //    };
-
-    //    /*\
-   
-    //public BO.Status? Status { get; set; }
-    //public List<TaskInList>? Dependencies { get; set; }
-    //public BO.MilestoneInTask? Milestone {get; set;}
-    //public TimeSpan RequiredEffortTime { get; set; }
-    //public DateTime? Start { get; set; }
-    //public DateTime? ScheduledDate { get; set; }
-    //public DateTime? ForecastDate { get; set; }
-    //public DateTime? Deadline { get; set; }
-    //public DateTime? Complete { get; set; }
-    //public string? Deliverables { get; set; }
-    //public string? Remarks { get; set; }
-    //public BO.EngineerInTask? Engineer { get; set; }
-    //public BO.EngineerExperience? Copmlexity { get; set; }
-    ////public override string ToString() => Tools.ToStringProperty(this);*/
-    ////    return boTask;
-    //}
+    private BO.Task ConvertDoTaskToBoTask(DO.Task task)
+    {
+        BO.Task newBoTask = new BO.Task
+        {
+            Id = task.Id,
+            Description = task.Description,
+            Alias = task.Alias,
+            Milestone = null,
+            CreatedAt = task.CreatedAt,
+            Status = (BO.Status)setStatus(task),
+            Dependencies = new List<BO.TaskInList>() { },
+            Start = task.Start,
+            ScheduledDate = task.ScheduledDate,
+            ForecastDate = task.ForecastDate,
+            Deadline = task.Deadline,
+            Complete = task.Complete,
+            Deliverables = task.Deliverables,
+            Remarks = task.Remarks,
+            Engineer = null,
+            Copmlexity = (BO.EngineerExperience?)task.ComplexityLevel,
+        };
+        int engineerId = task.EngineerId ?? 0;
+        if (engineerId > 0)
+        {
+            DO.Engineer? engineer = _dal.Engineer.Read(engineerId);
+            if (engineer != null)
+            {
+                BO.EngineerInTask engineerInTask = new BO.EngineerInTask { Id = engineer.Id, Name = engineer.Name };
+                newBoTask.Engineer = engineerInTask;
+            }
+        }
+        return newBoTask;
+    }
     public BO.Task? Read(int id)
     {
         try
         {
-            DO.Task? dalTask = _dal.Task.Read(id);
-            BO.Task blTask = ConvertFromDOtoBO(dalTask);
+            DO.Task dalTask = _dal.Task.Read(id) ?? throw new BO.BlNullPropertyException($"Task with Id={id} was not found");
+            BO.Task blTask = ConvertDoTaskToBoTask(dalTask);
             return blTask;
         }
-        catch (DO.DalDoesNotExistException ex)
+        catch (Exception ex)
         {
             throw new BO.BlDoesNotExistException($"Task with Id={id} was not found", ex);
         }
@@ -103,7 +135,7 @@ internal class TaskImplementation : ITask
     {
         if (task.Id <= 0 || task.Description is null || task.Description == "")
             throw new BO.BlNullPropertyException("Id or description was not valid");
-        if (task.CreatedAt > DateTime.Now || task.Deadline < task.ForecastDate || task.RequiredEffortTime.Days < 0)
+        if (task.CreatedAt > DateTime.Now || task.Deadline < task.ForecastDate)
             throw new BO.BlInvalidInputException("not valid dates");
         try
         {
