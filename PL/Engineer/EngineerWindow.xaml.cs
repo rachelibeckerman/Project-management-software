@@ -33,8 +33,8 @@ namespace PL.Engineer
                 CurrentEngineer = new BO.Engineer { Id = 0, Name = "", Email = "", Level = 0, Cost = 0, Task = new TaskInEngineer() {Id=0, Alias="" } };
             else
                 CurrentEngineer = s_bl?.Engineer.Read(Id)!;
-            var temp = s_bl?.TaskInEngineer.ReadAll();
-            TaskList = temp == null ? new() : new(temp!);
+            //var temp = s_bl?.TaskInEngineer.ReadAll();
+            //TaskList = temp == null ? new() : new(temp!);
         }
         public BO.Engineer CurrentEngineer
         {
@@ -47,7 +47,7 @@ namespace PL.Engineer
         typeof(EngineerWindow), new PropertyMetadata(null));
         public BO.EngineerExperience level { get; set; } = BO.EngineerExperience.All;
 
-        //
+      /*  //
         public ObservableCollection<BO.TaskInEngineer> TaskList
         {
             get { return (ObservableCollection<BO.TaskInEngineer>)GetValue(TaskInEngineerListProperty); }
@@ -57,8 +57,7 @@ namespace PL.Engineer
         DependencyProperty.Register("TaskList", typeof(ObservableCollection<BO.TaskInEngineer>),
         typeof(EngineerWindow), new PropertyMetadata(null));
 
-        //
-
+        //*/
         public event EventHandler ProductUpdatedAdd;
         private void BtnAddOrUpdateEngineer_Click(object sender, RoutedEventArgs e)
         {

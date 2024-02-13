@@ -11,5 +11,7 @@ internal class Bl : IBl
     public IEngineerInList EngineerInList => new EngineerInListImplementation();
 
     public ITaskInEngineer TaskInEngineer => new TaskInEngineerImplementation();
+
+    public ITaskInList TaskInList => new TaskInListImplementation();
 }
  

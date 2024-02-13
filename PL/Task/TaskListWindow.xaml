@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Task"
         mc:Ignorable="d"
-        Title="TaskListWindow" Height="450" Width="800">
+        Title="TaskListWindow" Height="450" Width="800"
+        DataContext = "{Binding RelativeSource={RelativeSource Mode=Self}}" >
+
     <!--Extrnal Grid-->
     <Grid>
         <Grid.RowDefinitions>
@@ -15,21 +17,26 @@
         </Grid.RowDefinitions>
         <!--Internal, Upper Grid-->
         <Grid Height="auto" Width="auto">
-            <Label Grid.Column="0">lable</Label>
-            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <!--Filter Tasks in list view-->
+            <Label Grid.Column="0" Content="Select the Copmlexity you want for tasks:"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource EngineerExperienceCollectionKey}}"
+                      SelectedValue="{Binding ComplexityLevel, Mode=TwoWay}"
+                      Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      SelectionChanged="ComboBoxTaskCopmlexity_SelectionChanged"/>
         </Grid>
-        <ListView Grid.Row="1">
+        <!--view the tasks-->
+        <ListView Grid.Row="1" ItemsSource="{Binding TasksList}" MouseDoubleClick ="OnClickUpdateTask" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="Button_ClickAddTask" />
 
     </Grid>
 

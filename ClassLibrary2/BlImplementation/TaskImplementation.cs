@@ -1,6 +1,8 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
+using DO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -12,9 +14,9 @@ internal class TaskImplementation : ITask
 
     public int Create(BO.Task task)
     {
-        if (task.Id <= 0 || task.Description is null || task.Description == "")
-            throw new BO.BlNullPropertyException("Id or description was not valid");
-        if (task.CreatedAt > DateTime.Now || task.Deadline < task.ForecastDate)
+        if (task.Description is null || task.Description == "" || task.Alias is null || task.Alias == "")
+            throw new BO.BlNullPropertyException("description or alias was not valid");
+        if (task.Start < task.CreatedAt || task.ScheduledDate < task.Start || task.ForecastDate > task.Deadline || task.Complete < task.ScheduledDate)
             throw new BO.BlInvalidInputException("not valid dates");
 
         DO.Task doTask = ConvertBoTaskToDoTask(task);
@@ -53,7 +55,7 @@ internal class TaskImplementation : ITask
     {
         try
         {
-           _dal.Task.Delete(id);
+            _dal.Task.Delete(id);
         }
         catch (DO.DalDeletionImpossible ex)
         {
@@ -79,7 +81,7 @@ internal class TaskImplementation : ITask
             Deliverables = task.Deliverables,
             Remarks = task.Remarks,
             Engineer = null,
-            Copmlexity = (BO.EngineerExperience?)task.ComplexityLevel,
+            ComplexityLevel = (BO.EngineerExperience?)task.ComplexityLevel,
         };
         int engineerId = task.EngineerId ?? 0;
         if (engineerId > 0)
@@ -127,24 +129,33 @@ internal class TaskImplementation : ITask
             task.Deliverables!,
             task.Remarks,
             task.Engineer?.Id,
-            (DO.EngineerExperience?)task.Copmlexity
+            (DO.EngineerExperience?)task.ComplexityLevel
           );
         return newDoTask;
     }
     public void Update(BO.Task task)
     {
-        if (task.Id <= 0 || task.Description is null || task.Description == "")
-            throw new BO.BlNullPropertyException("Id or description was not valid");
-        if (task.CreatedAt > DateTime.Now || task.Deadline < task.ForecastDate)
+        if (task.Description is null || task.Description == "" || task.Alias is null || task.Alias == "")
+            throw new BO.BlNullPropertyException("description or alias was not valid");
+        if (task.Start < task.CreatedAt || task.ScheduledDate < task.Start || task.ForecastDate > task.Deadline || task.Complete < task.ScheduledDate)
             throw new BO.BlInvalidInputException("not valid dates");
         try
         {
             DO.Task newDoTask = ConvertBoTaskToDoTask(task);
-            _dal.Task.Update(newDoTask);
-        }
+            if (task.Engineer is not null)
+                if (_dal.Engineer.Read(task.Engineer.Id) == null)
+                {
+                    throw new BO.BlDoesNotExistException("Engineer was not found");
+                }
+        _dal.Task.Update(newDoTask);
+    }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Task with Id={task.Id} was not found", ex);
+        }
+        catch (BO.BlDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException("Engineer was not found", ex);
         }
     }
 }

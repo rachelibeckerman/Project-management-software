@@ -5,8 +5,145 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Task"
         mc:Ignorable="d"
-        Title="TaskWindow" Height="450" Width="800">
+        Title="TaskWindow" Height="450" Width="800"
+         DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
     <Grid>
-        
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*" />
+            <ColumnDefinition Width="160*" />
+            <ColumnDefinition Width="180*" />
+            <ColumnDefinition Width="40*" />
+            <ColumnDefinition Width="160*" />
+            <ColumnDefinition Width="180*" />
+            <ColumnDefinition Width="40*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="350*"/>
+            <RowDefinition Height="50*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Height="300" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
+            <Label Content="Id:"    Grid.Row="0" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Description:"  Grid.Row="1" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Alias:" Grid.Row="2" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Deliverables:" Grid.Row="3" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Remarks:"  Grid.Row="4" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="ComplexityLevel:"  Grid.Row="5" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Engineer:"  Grid.Row="6" Height="40" HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Height="300" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" IsEnabled="False"                      Text ="{Binding Id , Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <TextBox Grid.Row="1" Text="{Binding Description, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <TextBox Grid.Row="2" Text="{Binding Alias, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <TextBox Grid.Row="3" Text="{Binding Deliverables, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <TextBox Grid.Row="4" Text="{Binding Remarks, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+            <ComboBox Grid.Row="5" Height="40" 
+                      ItemsSource="{Binding Source={StaticResource EngineerExperienceCollectionKey}}"
+                      SelectedValue="{Binding ComplexityLevel, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"/>
+            <Label Content="Id:"  Grid.Row="5" Height="30" Margin="0,40,134,16" Grid.RowSpan="2"/>
+            <TextBox  Grid.Row="5" Text="{Binding Engineer.Id, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}" 
+                      Margin="46,43,0,22" Grid.RowSpan="2" />
+            <Label Content="Name:"  Grid.Row="6" Height="30" Margin="1,23,131,-10"/>
+            <TextBox Grid.Row="6"  IsEnabled="False"  Text="{Binding Engineer.Name, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}" Margin="46,23,0,-1" />
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="300" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
+            <Label Content="Created At:"  Grid.Row="0" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Start:"  Grid.Row="1" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Scheduled Date:" Grid.Row="2" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Forecast Date:" Grid.Row="3" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Deadline:"  Grid.Row="4" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Complete:"  Grid.Row="5" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Content="Status:"  Grid.Row="6" Height="40" HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" Height="300" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
+            <!--//
+
+            <DatePicker Grid.Column="1" Grid.Row="5" SelectedDate="{Binding BaselineStart, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"  
+                     HorizontalAlignment="Left" Height="NaN" Margin="3" VerticalAlignment="Center" Width="120">
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+            //-->
+            <DatePicker Grid.Row="0" IsEnabled="False"                      SelectedDate ="{Binding CreatedAt , Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" >
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker>
+            <DatePicker Grid.Row="1" SelectedDate="{Binding Start, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40">
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker>
+            <DatePicker Grid.Row="2" SelectedDate="{Binding ScheduledDate, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40">
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker>
+            <DatePicker Grid.Row="3" SelectedDate="{Binding ForecastDate, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40">
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker>
+            <DatePicker Grid.Row="4" SelectedDate="{Binding Deadline, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" >
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker>
+            <DatePicker Grid.Row="5" SelectedDate="{Binding Complete, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40">
+                <DatePicker.Resources>
+                    <Style TargetType="DatePickerTextBox">
+                        <Setter Property="Text" Value="{Binding Path=SelectedDate, StringFormat='dd/MM/yyyy', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </Style>
+                </DatePicker.Resources>            </DatePicker> 
+            <TextBox Grid.Row="6" IsEnabled="False"  Text="{Binding Status, Mode=TwoWay, NotifyOnValidationError=true,ValidatesOnExceptions=true}"                      HorizontalAlignment="Stretch" Height="40" />
+        </Grid>
+        <Button Grid.Column="5" Content="{Binding Id , Mode=OneTime ,Converter={StaticResource ConverIdToContentKey}}"
+                HorizontalAlignment="Left" Grid.Row="2" 
+                Width="121" Click="BtnAddOrUpdateTask_Click" Margin="0,0,0,10" />
     </Grid>
 </Window>
