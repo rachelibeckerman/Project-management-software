@@ -11,8 +11,18 @@ internal class TaskImplementation : ITask
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
+    /// <summary>
+    /// create task entity
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns>new task id</returns>
+    /// <exception cref="BO.BlNullPropertyException"></exception>
+    /// <exception cref="BO.BlInvalidInputException"></exception>
+    /// <exception cref="BO.BlAlreadyExistException"></exception>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public int Create(BO.Task task)
     {
+        //validtion tests
         if (task.Description is null || task.Description == "" || task.Alias is null || task.Alias == "")
             throw new BO.BlNullPropertyException("description or alias was not valid");
         if (task.Start < task.CreatedAt || task.ScheduledDate < task.Start || task.ForecastDate > task.Deadline || task.Complete < task.ScheduledDate)
@@ -22,8 +32,15 @@ internal class TaskImplementation : ITask
 
         try
         {
+            //check if task has an engineer
             if (task.Engineer is not null && task.Engineer.Id != 0)
             {
+                //check if wanted engineer exists
+                if (_dal.Engineer.Read(task.Engineer.Id) == null)
+                {
+                    throw new BO.BlDoesNotExistException("Engineer was not found");
+                }
+                //check if a diffrent task with the same engineer already exists
                 IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
                 DO.Task? newDoTask = (from newTask in allTasks
                                       where newTask.EngineerId == task.Engineer.Id
@@ -32,12 +49,8 @@ internal class TaskImplementation : ITask
                 {
                     throw new BO.BlAlreadyExistException("Engineer is busy");
                 }
-                if (_dal.Engineer.Read(task.Engineer.Id) == null)
-                {
-                    throw new BO.BlDoesNotExistException("Engineer was not found");
-                }
             }
-            _dal.Task.Create(doTask);
+            _dal.Task.Create(doTask);//create DO.Task
         }
         catch (DO.DalAlreadyExistsException ex)
         {
@@ -45,6 +58,13 @@ internal class TaskImplementation : ITask
         }
         return doTask.Id;
     }
+
+    /// <summary>
+    ///update status according to task progress 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns>status</returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     private int setStatus(DO.Task task)
     {
         try
@@ -63,9 +83,14 @@ internal class TaskImplementation : ITask
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"Task with Id={task.Id} was not found", ex);
+            throw new BO.BlDoesNotExistException($"Task was not found", ex);
         }
     }
+    /// <summary>
+    /// delete task
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="BO.BlDeletionImpossibleException"></exception>
     public void Delete(int id)
     {
         try
@@ -77,6 +102,11 @@ internal class TaskImplementation : ITask
             throw new BO.BlDeletionImpossibleException("A Task can't be deleted.", ex);
         }
     }
+    /// <summary>
+    /// Convert Do.Task To Bo.Task
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns>BO.Task from DO.Task</returns>
     private BO.Task ConvertDoTaskToBoTask(DO.Task task)
     {
         BO.Task newBoTask = new BO.Task
@@ -110,27 +140,47 @@ internal class TaskImplementation : ITask
         }
         return newBoTask;
     }
+
+    /// <summary>
+    /// read task by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>BO.Task</returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public BO.Task? Read(int id)
     {
         try
         {
-            DO.Task dalTask = _dal.Task.Read(id) ?? throw new BO.BlNullPropertyException($"Task with Id={id} was not found");
+            DO.Task dalTask = _dal.Task.Read(id) ?? throw new BO.BlNullPropertyException($"Task was not found");
             BO.Task blTask = ConvertDoTaskToBoTask(dalTask);
             return blTask;
         }
         catch (Exception ex)
         {
-            throw new BO.BlDoesNotExistException($"Task with Id={id} was not found", ex);
+            throw new BO.BlDoesNotExistException($"Task was not found", ex);
         }
     }
 
+    /// <summary>
+    /// read all tasks, passible by filter
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<BO.Task> ReadAll(Func<DO.Task, bool>? filter = null)
     {
+        //read all DO.Tasks  
         IEnumerable<DO.Task> allDoTasks = _dal.Task.ReadAll(filter)!;
+        //convet each one to BO.Task by BO.Read function
         IEnumerable<BO.Task> tasks = from task in allDoTasks
                                      select Read(task.Id);
         return tasks;
     }
+
+    /// <summary>
+    /// Convert Bo.Task To Do.Task
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns>DO.Task from BO.Task</returns>
     private DO.Task ConvertBoTaskToDoTask(BO.Task task)
     {
         DO.Task newDoTask = new DO.Task(
@@ -151,16 +201,35 @@ internal class TaskImplementation : ITask
           );
         return newDoTask;
     }
+
+    /// <summary>
+    /// update task properties
+    /// </summary>
+    /// <param name="task"></param>
+    /// <exception cref="BO.BlNullPropertyException"></exception>
+    /// <exception cref="BO.BlInvalidInputException"></exception>
+    /// <exception cref="BO.BlAlreadyExistException"></exception>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public void Update(BO.Task task)
     {
+        //validation tests
         if (task.Description is null || task.Description == "" || task.Alias is null || task.Alias == "")
             throw new BO.BlNullPropertyException("description or alias was not valid");
         if (task.Start < task.CreatedAt || task.ScheduledDate < task.Start || task.ForecastDate > task.Deadline || task.Complete < task.ScheduledDate)
             throw new BO.BlInvalidInputException("not valid dates");
+
+
         try
         {
+            //check if user entered an engineer to task
             if (task.Engineer is not null && task.Engineer.Id != 0)
             {
+                //check if wanted engineer exists
+                if (_dal.Engineer.Read(task.Engineer.Id) == null)
+                {
+                    throw new BO.BlDoesNotExistException("Engineer was not found");
+                }
+                //check if a diffrent task with the same engineer already exists
                 IEnumerable<DO.Task> allTasks = _dal.Task.ReadAll()!;
                 DO.Task? doTask = (from newTask in allTasks
                                       where newTask.EngineerId == task.Engineer.Id
@@ -168,11 +237,7 @@ internal class TaskImplementation : ITask
                 if (doTask != null && doTask.Id != task.Id)
                 {
                     throw new BO.BlAlreadyExistException("Engineer is busy");
-                }
-                if (_dal.Engineer.Read(task.Engineer.Id) == null)
-                {
-                    throw new BO.BlDoesNotExistException("Engineer was not found");
-                }
+                }  
             }
             DO.Task newDoTask = ConvertBoTaskToDoTask(task);
             _dal.Task.Update(newDoTask);

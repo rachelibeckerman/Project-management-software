@@ -25,6 +25,7 @@ namespace PL.Task
         public TaskWindow(int Id = 0)
         {
             InitializeComponent();
+            //check if to open add window or update window
             if (Id == 0)
                 CurrentTask = new BO.Task
                 {
@@ -59,10 +60,21 @@ namespace PL.Task
         DependencyProperty.Register("CurrentTask", typeof(BO.Task),
         typeof(TaskWindow), new PropertyMetadata(null));
 
+        /// <summary>
+        /// enum engineer experience to complexity level
+        /// </summary>
         public BO.EngineerExperience ComplexityLevel { get; set; } = BO.EngineerExperience.All;
 
+        /// <summary>
+        /// Initialize event to manage the option of refreshing the TasksList.
+        /// </summary>
         public event EventHandler ProductUpdatedAdd;
 
+        /// <summary>
+        /// button click to add or update task
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAddOrUpdateTask_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -72,13 +84,13 @@ namespace PL.Task
                 {
                     s_bl.Task.Create(CurrentTask);//create Bo.Engineer
                     MessageBox.Show($"Task added");
-                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);
+                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);//invoking the refresh list event - calling the function that refreshes the list.
                 }
                 else
                 {
                     s_bl.Task.Update(CurrentTask);//update Bo.Engineer
                     MessageBox.Show($"Task updated!");
-                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);
+                    ProductUpdatedAdd?.Invoke(this, EventArgs.Empty);//invoking the refresh list event - calling the function that refreshes the list.
                 }
                 this.Close();//close add/update windows 
 

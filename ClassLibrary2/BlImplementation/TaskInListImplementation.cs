@@ -1,6 +1,5 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 
@@ -8,6 +7,13 @@ internal class TaskInListImplementation : ITaskInList
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
+
+    /// <summary>
+    ///update status according to task progress 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns>return status</returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     private int setStatus(DO.Task task)
     {
         try
@@ -29,6 +35,13 @@ internal class TaskInListImplementation : ITaskInList
             throw new BO.BlDoesNotExistException($"Task with Id={task.Id} was not found", ex);
         }
     }
+    
+    /// <summary>
+    /// read task in list by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public BO.TaskInList? Read(int id)
     {
         try
@@ -52,7 +65,11 @@ internal class TaskInListImplementation : ITaskInList
         }
     }
 
-
+    /// <summary>
+    /// read all tasks in list 
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<BO.TaskInList?> ReadAll(Func<DO.Task, bool>? filter = null)
     {
         IEnumerable<DO.Task> allDoTasks = _dal.Task.ReadAll(filter)!;

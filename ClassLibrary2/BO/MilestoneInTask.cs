@@ -2,6 +2,7 @@
 /// <summary>
 /// MilestoneInTask entity defenition
 /// </summary>
+
 public class MilestoneInTask
 {
     public int Id { get; init; }
