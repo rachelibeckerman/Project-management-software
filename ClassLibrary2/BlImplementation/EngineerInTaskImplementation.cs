@@ -7,7 +7,12 @@ internal class EngineerInTaskImplementation : IEngineerInTask
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
-
+    /// <summary>
+    /// read engineer in task by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>BO.EngineerInTask</returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public BO.EngineerInTask? Read(int id)
     {
             DO.Engineer? dalEngineer = _dal.Engineer.Read(id);
@@ -21,6 +26,11 @@ internal class EngineerInTaskImplementation : IEngineerInTask
             return blEngineer;
     }
 
+    /// <summary>
+    /// read all engineers in task
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns>IEnumerable<BO.EngineerInTask?></returns>
     public IEnumerable<BO.EngineerInTask?> ReadAll(Func<DO.Engineer, bool>? filter = null)
     {
         IEnumerable<DO.Engineer> dalEngineers = _dal.Engineer.ReadAll(filter)!;
